@@ -9,7 +9,7 @@
 #define PROGRAM			TOK_PROGRAM
 #define IDENT			TOK_IDENT
 #define SEMIC			TOK_SEMIC
-#define DECLARATIONS	TOK_N_DECLARATIONS
+#define DEC     	    TOK_N_DECLARATIONS
 #define CMPD_STMT		TOK_N_CMPD_STMT
 #define DOT				TOK_DOT
 #define DEFAULT			TOK_DEFAULT
@@ -76,47 +76,47 @@ const int GR_FIRST_SELSET = 7;      // index of first member of Select Set
 const int GR_LAST_SELSET = 10;      // index of last member of Select Set
 
 const TOKENID PROD[GR_NUMPRODS][GR_TABLE_WIDTH] = {
-	{N_PROGRAM, PROGRAM, IDENT, SEMIC, DECLARATIONS, CMPD_STMT, DOT, DEFAULT, E, E, E},
-	{ID_LIST, IDENT, ID_LIST_END, E, E, E, E, DEFAULT, E, E, E},
-	{ID_LIST_END, COMMA, ID_LIST, E, E, E, E, COMMA, E, E, E},
-	{ID_LIST_END, E, E, E, E, E, E, DEFAULT, E, E, E},
-	{DECLARATIONS, VAR, ID_LIST, COLON, TYPE, SEMIC, DECLARATIONS, VAR, E, E, E},
-	{DECLARATIONS, E, E, E, E, E, E, DEFAULT, E, E, E},
-	{TYPE, INTEGER, E, E, E, E, E, INTEGER, E, E, E},
-	{TYPE, REAL, E, E, E, E, E, REAL, E, E, E},
-	{TYPE, STRING, E, E, E, E, E, DEFAULT, E, E, E},
-	{CMPD_STMT, BEGIN, OPT_STMTS, END, E, E, E, DEFAULT, E, E, E},
-	{OPT_STMTS, E, E, E, E, E, E, END, E, E, E},
-	{OPT_STMTS, STMT_LIST, E, E, E, E, E, DEFAULT, E, E, E},
-	{STMT_LIST, STMT, STMT_LIST_END, E, E, E, E, DEFAULT, E, E, E},
-	{STMT_LIST_END, SEMIC, STMT_LIST, E, E, E, E, SEMIC, E, E, E},
-	{STMT_LIST_END, E, E, E, E, E, E, DEFAULT, E, E, E},
-	{STMT, IDENT, ASSIGN, EXPR, E, E, E, IDENT, E, E, E},
-	{STMT, IF, COND, THEN, STMT, ELSE, STMT, IF, E, E, E},
-	{STMT, WHILE, COND, DO, STMT, E, E, WHILE, E, E, E},
-	{STMT, CMPD_STMT, E, E, E, E, E, DEFAULT, E, E, E},
-	{COND, EXPR, RELOP, EXPR, E, E, E, DEFAULT, E, E, E},
-	{EXPR, VAL, EXPR_END, E, E, E, E, DEFAULT, E, E, E},
-	{EXPR_END, ARITH, VAL, EXPR_END, E, E, E, PLUS, MINUS, STAR, SLASH},
-	{EXPR_END, E, E, E, E, E, E, DEFAULT, E, E, E},
-	{ARITH, PLUS, E, E, E, E, E, PLUS, E, E, E},
-	{ARITH, MINUS, E, E, E, E, E, MINUS, E, E, E},
-	{ARITH, STAR, E, E, E, E, E, STAR, E, E, E},
-	{ARITH, SLASH, E, E, E, E, E, DEFAULT, E, E, E,},
-	{RELOP, LTHAN, E, E, E, E, E, LTHAN, E, E, E},
-	{RELOP, LTHAN_EQ, E, E, E, E, E, LTHAN_EQ, E, E, E},
-	{RELOP, GTHAN, E, E, E, E, E, GTHAN, E, E, E},
-	{RELOP, GTHAN_EQ, E, E, E, E, E, GTHAN_EQ, E, E, E},
-	{RELOP, NOT_EQ, E, E, E, E, E, NOT_EQ, E, E, E},
-	{RELOP, EQUAL, E, E, E, E, E, DEFAULT, E, E, E},
-	{VAL, IDENT, E, E, E, E, E, IDENT, E, E, E},
-	{VAL, INT_LIT, E, E, E, E, E, INT_LIT, E, E, E},
-	{VAL, REAL_LIT, E, E, E, E, E, REAL_LIT, E, E, E},
-	{VAL, STRING_LIT, E, E, E, E, E, STRING_LIT, E, E, E},
-	{VAL, LPAREN, EXPR, RPAREN, E, E, E, LPAREN, E, E, E},
-	{VAL, SIGN, VAL, E, E, E, E, DEFAULT, E, E, E},
-	{SIGN, PLUS, E, E, E, E, E, PLUS, E, E, E},
-	{SIGN, MINUS, E, E, E, E, E, DEFAULT, E, E, E}
+	{N_PROGRAM,     PROGRAM,    IDENT,          SEMIC,      DEC,    CMPD_STMT,  DOT,    DEFAULT,    E,      E,      E},
+	{ID_LIST,       IDENT,      ID_LIST_END,    E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{ID_LIST_END,   COMMA,      ID_LIST,        E,          E,      E,          E,      COMMA,      E,      E,      E},
+	{ID_LIST_END,   E,          E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{DEC,           VAR,        ID_LIST,        COLON,      TYPE,   SEMIC,      DEC,    VAR,        E,      E,      E},
+	{DEC,           E,          E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{TYPE,          INTEGER,    E,              E,          E,      E,          E,      INTEGER,    E,      E,      E},
+	{TYPE,          REAL,       E,              E,          E,      E,          E,      REAL,       E,      E,      E},
+	{TYPE,          STRING,     E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{CMPD_STMT,     BEGIN,      OPT_STMTS,      END,        E,      E,          E,      DEFAULT,    E,      E,      E},
+	{OPT_STMTS,     E,          E,              E,          E,      E,          E,      END,        E,      E,      E},
+	{OPT_STMTS,     STMT_LIST,  E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{STMT_LIST,     STMT,       STMT_LIST_END,  E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{STMT_LIST_END, SEMIC,      STMT_LIST,      E,          E,      E,          E,      SEMIC,      E,      E,      E},
+	{STMT_LIST_END, E,          E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{STMT,          IDENT,      ASSIGN,         EXPR,       E,      E,          E,      IDENT,      E,      E,      E},
+	{STMT,          IF,         COND,           THEN,       STMT,   ELSE,       STMT,   IF,         E,      E,      E},
+	{STMT,          WHILE,      COND,           DO,         STMT,   E,          E,      WHILE,      E,      E,      E},
+	{STMT,          CMPD_STMT,  E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{COND,          EXPR,       RELOP,          EXPR,       E,      E,          E,      DEFAULT,    E,      E,      E},
+	{EXPR,          VAL,        EXPR_END,       E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{EXPR_END,      ARITH,      VAL,            EXPR_END,   E,      E,          E,      PLUS,       MINUS,  STAR,   SLASH},
+	{EXPR_END,      E,          E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{ARITH,         PLUS,       E,              E,          E,      E,          E,      PLUS,       E,      E,      E},
+	{ARITH,         MINUS,      E,              E,          E,      E,          E,      MINUS,      E,      E,      E},
+	{ARITH,         STAR,       E,              E,          E,      E,          E,      STAR,       E,      E,      E},
+	{ARITH,         SLASH,      E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{RELOP,         LTHAN,      E,              E,          E,      E,          E,      LTHAN,      E,      E,      E},
+	{RELOP,         LTHAN_EQ,   E,              E,          E,      E,          E,      LTHAN_EQ,   E,      E,      E},
+	{RELOP,         GTHAN,      E,              E,          E,      E,          E,      GTHAN,      E,      E,      E},
+	{RELOP,         GTHAN_EQ,   E,              E,          E,      E,          E,      GTHAN_EQ,   E,      E,      E},
+	{RELOP,         NOT_EQ,     E,              E,          E,      E,          E,      NOT_EQ,     E,      E,      E},
+	{RELOP,         EQUAL,      E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{VAL,           IDENT,      E,              E,          E,      E,          E,      IDENT,      E,      E,      E},
+	{VAL,           INT_LIT,    E,              E,          E,      E,          E,      INT_LIT,    E,      E,      E},
+	{VAL,           REAL_LIT,   E,              E,          E,      E,          E,      REAL_LIT,   E,      E,      E},
+	{VAL,           STRING_LIT, E,              E,          E,      E,          E,      STRING_LIT, E,      E,      E},
+	{VAL,           LPAREN,     EXPR,           RPAREN,     E,      E,          E,      LPAREN,     E,      E,      E},
+	{VAL,           SIGN,       VAL,            E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{SIGN,          PLUS,       E,              E,          E,      E,          E,      PLUS,       E,      E,      E},
+	{SIGN,          MINUS,      E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E}
 };
 
 //undefine macros
@@ -125,7 +125,7 @@ const TOKENID PROD[GR_NUMPRODS][GR_TABLE_WIDTH] = {
 #undef PROGRAM
 #undef IDENT
 #undef SEMIC
-#undef DECLARATIONS
+#undef DEC
 #undef CMPD_STMT
 #undef DOT
 #undef DEFAULT
