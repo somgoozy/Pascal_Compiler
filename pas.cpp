@@ -5,8 +5,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
-#include "parser.h"
-#include "grammar.h"
+#include "src/parser.h"
 using namespace std;
 
 int  main(int argc, char** argv) {
