@@ -6,30 +6,30 @@ symbol::symbol() {
 	next = NULL;
 }
 
-void symbol::setDataType(int dt){
+void symbol::setDataType(int dt) {
 	dataType = dt;
 }
 
-string symbol::getLex(){
+string symbol::getLex() {
 	return lexeme;
 }
 
-int symbol::getCategory(){
+int symbol::getCategory() {
 	return category;
 }
 
-int symbol::getDataType(){
+int symbol::getDataType() {
 	return dataType;
 }
 
 void symbol::setLex(string lex) {
 	lexeme = lex;
-    //check for string literal
+	//check for string literal
 	if (lex[0] == '\'') {
 		category = SYMCAT_STRING_LIT;
 		dataType = DTYPE_STRING;
 	}
-    //check for int literal
+	//check for int literal
 	else if (lex[0] >= '0' && lex[0] <= '9') {
 		category = SYMCAT_INT_LIT;
 		dataType = DTYPE_INT;
@@ -40,7 +40,7 @@ void symbol::setLex(string lex) {
 				dataType = DTYPE_REAL;
 			}
 	}
-    //who knows?
+	//who knows?
 	else {
 		category = SYMCAT_IDENT;
 		dataType = DTYPE_UNKNOWN;

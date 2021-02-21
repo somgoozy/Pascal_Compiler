@@ -1,6 +1,3 @@
-//------------------------------------------------
-//           test program for project 2
-//------------------------------------------------
 #include <iostream>
 #include <iomanip>
 #include <fstream>

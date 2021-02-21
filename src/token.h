@@ -50,13 +50,13 @@ const string TOKENID_STR[NUM_TOKENIDS] = {
 
 class token {
 public:
-	symbol*	        getRef();
+	symbol* getRef();
 	TOKENID			getId();
 	void			setId(TOKENID tid);
 	void			setRef(symbol* tref);
-    string		    getPrintString();
-    bool            isNonTerminal();
+	string		    getPrintString();
+	bool            isNonTerminal();
 private:
 	TOKENID			id = TOK_NONE;		    // identifies the type of token, including reserved words/symbols
-	symbol*	        ref = NULL;				// pointer to an entry in the symbol table; NULL for res. words
+	symbol* ref = NULL;				// pointer to an entry in the symbol table; NULL for res. words
 };

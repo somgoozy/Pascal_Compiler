@@ -4,19 +4,19 @@
 #include <string>
 #include "token.h"
 
-symbol* token::getRef(){
+symbol* token::getRef() {
 	return ref;
 }
 
-TOKENID token::getId(){
+TOKENID token::getId() {
 	return id;
 }
 
-void token::setId(TOKENID tid){
+void token::setId(TOKENID tid) {
 	id = tid;
 }
 
-void token::setRef(symbol* tref){
+void token::setRef(symbol* tref) {
 	ref = tref;
 }
 

@@ -4,7 +4,7 @@
 #include "symbolTable.h"
 
 symbol* symbolTable::insert(string newlex) {
-    //insert lexeme into the symbol table
+	//insert lexeme into the symbol table
 	symbol* s = search(newlex);
 	if (!s) {
 		int hv = hash(newlex);
@@ -17,7 +17,7 @@ symbol* symbolTable::insert(string newlex) {
 }
 
 int symbolTable::hash(string lexToHash) {
-    //simple hashing function
+	//simple hashing function
 	int sum = 0;
 	for (int i = 0; i < (int)lexToHash.length(); i++) {
 		sum += (int)lexToHash[i];
@@ -26,7 +26,7 @@ int symbolTable::hash(string lexToHash) {
 }
 
 symbol* symbolTable::search(string searchFor) {
-    //search for reference to a given lexeme
+	//search for reference to a given lexeme
 	int hv = hash(searchFor);
 	symbol* p = bucket[hv];
 	//go through every bucket

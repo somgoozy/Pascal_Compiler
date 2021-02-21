@@ -57,16 +57,6 @@
 #define RPAREN			TOK_RPAREN
 #define TERM            TOK_TERM
 
-
-// 2D array of TOKENID where:
-// - each row represents a production from the grammar
-// - column  0:    Non-Terminal on the Left Hand Side
-// - columns 1-6:  Terminals/Non-Terminals on the Right Hand Side
-//                 When fewer than 6, right-padded with E (Epsilon)
-// - columns 7-10: The Select Set, right-padded with E when fewer than 4
-//                 DEFAULT in column 7 means "default" production
-
-
 const int GR_NUMPRODS = 41;			// total number of productions in grammar
 const int GR_TABLE_WIDTH = 11;		// total number of columns in table
 const int GR_LHS = 0;				// index of LHS Non-Terminal
@@ -115,7 +105,7 @@ const TOKENID PROD[GR_NUMPRODS][GR_TABLE_WIDTH] = {
 	{VAL,           STRING_LIT, E,              E,          E,      E,          E,      STRING_LIT, E,      E,      E},
 	{VAL,           LPAREN,     EXPR,           RPAREN,     E,      E,          E,      LPAREN,     E,      E,      E},
 	{VAL,           PLUS,       INT_LIT,        E,          E,      E,          E,      PLUS,       E,      E,      E},
-    {VAL,           MINUS,      INT_LIT,        E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{VAL,           MINUS,      INT_LIT,        E,          E,      E,          E,      DEFAULT,    E,      E,      E},
 };
 
 //undefine macros

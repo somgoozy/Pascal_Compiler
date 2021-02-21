@@ -139,7 +139,7 @@ begin {branch}
             setlength (leftData, (n div 2));
             for i := 1 to (n div 2) do
                 setLength (leftData [i], 4);
-            setlength (rightData, (n div 2));       
+            setlength (rightData, (n div 2));
             for i := 1 to (n div 2) do
                 setLength (rightData [i], 4);
             for i := 1 to (n div 2) do
@@ -158,7 +158,7 @@ begin {branch}
             setlength (leftData, ((n div 2) + 1));
             for i := 1 to ((n div 2) + 1) do
                 setLength (leftData [i], 4);
-            setlength (rightData, (n div 2));       
+            setlength (rightData, (n div 2));
             for i := 1 to (n div 2) do
                 setLength (rightData [i], 4);
             for i := 1 to ((n div 2) + 1) do

@@ -4,7 +4,7 @@
 
 const int NUMBER_OF_BUCKETS = 10000;
 
-class symbolTable{
+class symbolTable {
 public:
 	symbol* search(string lex);
 	symbol* insert(string newlex);
