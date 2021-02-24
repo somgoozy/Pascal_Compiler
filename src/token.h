@@ -24,7 +24,7 @@ enum TOKENID {
 	TOK_N_ARITH_OP, TOK_DEFAULT
 };
 
-const string TOKENID_STR[NUM_TOKENIDS] = {
+const std::string TOKENID_STR[NUM_TOKENIDS] = {
 	// Special Token Ids - not Pascal Reserved Words or Symbols
 	// TOK_EOS=End of Source, when getNextLex returns "". Since EOF is a Res. Wd., can't use TOK_EOF
 	"TOK_NONE", "TOK_ERROR", "TOK_EOS", "TOK_INT_LIT", "TOK_REAL_LIT", "TOK_STRING_LIT", "TOK_IDENT", "TOK_TERM",
@@ -50,13 +50,13 @@ const string TOKENID_STR[NUM_TOKENIDS] = {
 
 class token {
 public:
-	symbol* getRef();
+	symbol*         getRef();
 	TOKENID			getId();
 	void			setId(TOKENID tid);
 	void			setRef(symbol* tref);
-	string		    getPrintString();
+	std::string		getPrintString();
 	bool            isNonTerminal();
 private:
 	TOKENID			id = TOK_NONE;		    // identifies the type of token, including reserved words/symbols
-	symbol* ref = NULL;				// pointer to an entry in the symbol table; NULL for res. words
+	symbol*         ref = NULL;				// pointer to an entry in the symbol table; NULL for res. words
 };

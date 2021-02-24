@@ -21,16 +21,16 @@ void interpreter::push(token top, int prod) {
 	}
 	//declarations
 	else if (PROD[advancement.top().prodNum][0] == TOK_N_DECLARATIONS
-		|| PROD[advancement.top().prodNum][0] == TOK_N_TYPE
-		|| PROD[advancement.top().prodNum][0] == TOK_N_ID_LIST) {
+		  || PROD[advancement.top().prodNum][0] == TOK_N_TYPE
+		  || PROD[advancement.top().prodNum][0] == TOK_N_ID_LIST) {
 		declare(top);
 	}
 	//expression
 	else if (PROD[advancement.top().prodNum][0] == TOK_N_EXPR
-		|| PROD[advancement.top().prodNum][0] == TOK_N_EXPR_END
-		|| PROD[advancement.top().prodNum][0] == TOK_N_ARITH_OP
-		|| PROD[advancement.top().prodNum][0] == TOK_N_RELOP
-		|| PROD[advancement.top().prodNum][0] == TOK_N_VAL) {
+		  || PROD[advancement.top().prodNum][0] == TOK_N_EXPR_END
+		  || PROD[advancement.top().prodNum][0] == TOK_N_ARITH_OP
+		  || PROD[advancement.top().prodNum][0] == TOK_N_RELOP
+		  || PROD[advancement.top().prodNum][0] == TOK_N_VAL) {
 		exp = expression(top);
 	}
 }
@@ -40,8 +40,8 @@ void interpreter::increment() {
 	if (!advancement.empty()) {
 		advancement.top().depth++;
 		//if we hit the end we need to pop and make progress
-		while (PROD[advancement.top().prodNum][advancement.top().depth] == TOK_N_EPSILON
-			|| advancement.top().depth > GR_LAST_RHS) {
+		while ((PROD[advancement.top().prodNum][advancement.top().depth] == TOK_N_EPSILON)
+                || (advancement.top().depth > GR_LAST_RHS)) {
 			advancement.pop();
 			if (advancement.empty())
 				break;
@@ -51,37 +51,41 @@ void interpreter::increment() {
 }
 
 void interpreter::declare(token top) {
-	static stack <token>    idList;
-	value                   myVar;
-	//push token to stack
-	if (PROD[advancement.top().prodNum][0] == TOK_N_ID_LIST) {
-		if (PROD[advancement.top().prodNum][advancement.top().depth] == TOK_IDENT) {
-			idList.push(top);
-		}
-	}
-	//find out what type tokens are and pop them off the stack and store in the vector
-	else if (PROD[advancement.top().prodNum][0] == TOK_N_TYPE) {
-		while (!idList.empty()) {
-			myVar.tok.setRef(idList.top().getRef());
-			myVar.tok.setId(PROD[advancement.top().prodNum][GR_FIRST_RHS]);
-			var.push_back(myVar);
-			idList.pop();
-		}
+	static std::stack <token>   idList;
+	value                       myVar;
+
+	switch(PROD[advancement.top().prodNum][0]) {
+        //push token to stack
+        case TOK_N_ID_LIST:
+            if (PROD[advancement.top().prodNum][advancement.top().depth] == TOK_IDENT) {
+                idList.push(top);
+            }
+            break;
+        //find out what type tokens are and pop them off the stack and store in the vector
+        case TOK_N_TYPE:
+            while (!idList.empty()) {
+                myVar.tok.setRef(idList.top().getRef());
+                myVar.tok.setId(PROD[advancement.top().prodNum][GR_FIRST_RHS]);
+                var.push_back(myVar);
+                idList.pop();
+            }
+            break;
+        default:
+            //do nothing
+            break;
 	}
 }
 
 value interpreter::expression(token top) {
-	static vector <value> rhs;
+	static std::vector <value> rhs;
 	value myVal;
 
 	//if at the end of the expression
 	if (PROD[advancement.top().prodNum][advancement.top().depth] == TOK_TERM
-		&& PROD[advancement.top().prodNum][GR_LHS] == TOK_N_EXPR_END) {
+            && PROD[advancement.top().prodNum][GR_LHS] == TOK_N_EXPR_END) {
 		if (rhs.size() < 1) {
 			simplify(rhs);
 		}
-		else;
-		//throw error
 	}
 	//if its a terminal then push it to the vector
 	else if (!top.isNonTerminal()) {
@@ -95,32 +99,13 @@ value interpreter::expression(token top) {
 	return rhs[0];
 }
 
-void interpreter::simplify(vector<value>& myVector) {
-	if (myVector.size() > 1) {
-		//do parenths
-		doParenth(myVector);
-		//do math
-		for (size_t i = 0; i < myVector.size(); i++) {
-			if (myVector[i].tok.getId() == TOK_STAR) {
-				if
-			}
-			//divide
-			//and
-		}
-		for (size_t i = 0; i < myVector.size(); i++) {
-			//add
-			//subtract
-			//or
-		}
-		for (size_t i = 0; i < myVector.size(); i++) {
-			//compare
-		}
-	}
+void interpreter::simplify(std::vector<value>& myVector) {
+
 }
 
-void interpreter::doParenth(vector<value>& myVector) {
-	vector<value> subVector;
-	int           parenth;
+void interpreter::doParenth(std::vector<value>& myVector) {
+	std::vector<value> subVector;
+	int parenth;
 
 	for (size_t i = 0; i < myVector.size(); i++) {
 		//find innermost right parenth
@@ -148,26 +133,28 @@ void interpreter::doParenth(vector<value>& myVector) {
 	}
 }
 
-VAL interpreter::getVal(token myToken) {
+bucket interpreter::getVal(token myToken) {
+    bucket retBucket;
 	if (myToken.getRef()->getCategory() == SYMCAT_IDENT) {
 		for (size_t i = 0; i < var.size(); i++) {
-			if (var[i].tok.getRef() == myToken.getRef())
+			if (var[i].tok.getRef() == myToken.getRef()) {
 				return var[i].tokVal;
+			}
 		}
-		//throw error
-		return -1;
+		//throw error; undefined identifier used in expression
 	}
 	else if (myToken.getRef()->getCategory() == SYMCAT_INT_LIT) {
-		return stoi(myToken.getRef()->getLex());
+		retBucket = stoi(myToken.getRef()->getLex());
 	}
 	else if (myToken.getRef()->getCategory() == SYMCAT_REAL_LIT) {
-		return stof(myToken.getRef()->getLex());
+		retBucket = stof(myToken.getRef()->getLex());
 	}
 	else if (myToken.getRef()->getCategory() == SYMCAT_STRING_LIT) {
-		return myToken.getRef()->getLex();
+		retBucket = myToken.getRef()->getLex();
 	}
-	else {
-		//throw error
-	}
-	return -1;
+    else {
+        //throw error; unknown data type
+        //should never happen
+        }
+	return retBucket;
 }

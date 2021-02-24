@@ -6,24 +6,24 @@
 
 class scanner {
 public:
-	int	   open(string source);
-	string getError();
-	bool   isError();
-	token  getNextToken();
-	void   close();
+	int	            open(std::string source);
+	std::string     getError();
+	bool            isError();
+	token           getNextToken();
+	void            close();
 private:
-	string error = "";
-	bool   is_error = false;
-	int    lineNo = 1;
-	ifstream f;
+	std::string     error = "";
+	bool            is_error = false;
+	int             lineNo = 1;
+	std::ifstream   f;
 
-	CHAR_CAT	categorize(char c);
-	void		setError(string method, char c, string msg);
-	int			getTrans(FSA_STATE currState, char c);
-	string		getFSAerror(CHAR_CAT cc, FSA_STATE state);
-	string		getNextLexeme();
-	TOKENID		resWordToTokenId(string lex);
-	symbolTable	symbolTbl;
-	string		upcase(string s);
-	TOKENID		symCatToTokId(int cat);
+	CHAR_CAT	    categorize(char c);
+	void		    setError(std::string method, char c, std::string msg);
+	int			    getTrans(FSA_STATE currState, char c);
+	std::string		getFSAerror(CHAR_CAT cc, FSA_STATE state);
+	std::string		getNextLexeme();
+	TOKENID		    resWordToTokenId(std::string lex);
+	symbolTable	    symbolTbl;
+	std::string		upcase(std::string s);
+	TOKENID		    symCatToTokId(int cat);
 };

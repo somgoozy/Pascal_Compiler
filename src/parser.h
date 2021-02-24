@@ -7,16 +7,15 @@
 
 class parser {
 public:
-	string compile(string fn);
+	std::string                     compile(std::string fn);
 private:
-	stack<token>            tokStack;
-	stack<array<int, 2>>    progress;
-	scanner                 scan;
-	token                   top, nextToken;
-	string                  parseError = "";
-	interpreter             myInterpreter;
-
-	int     selectProd();
-	void    pushProdRHS(int prodNum);
-	bool    startup(string filename);
+	std::stack<token>               tokStack;
+	std::stack<std::array<int, 2>>  progress;
+	scanner                         scan;
+	token                           top, nextToken;
+	std::string                     parseError = "";
+	interpreter                     myInterpreter;
+	int                             selectProd();
+	void                            pushProdRHS(int prodNum);
+	bool                            startup(std::string filename);
 };

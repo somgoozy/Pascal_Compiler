@@ -10,7 +10,7 @@ void symbol::setDataType(int dt) {
 	dataType = dt;
 }
 
-string symbol::getLex() {
+std::string symbol::getLex() {
 	return lexeme;
 }
 
@@ -22,7 +22,7 @@ int symbol::getDataType() {
 	return dataType;
 }
 
-void symbol::setLex(string lex) {
+void symbol::setLex(std::string lex) {
 	lexeme = lex;
 	//check for string literal
 	if (lex[0] == '\'') {

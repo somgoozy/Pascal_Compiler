@@ -1,5 +1,6 @@
 #include "parser.h"
-string parser::compile(string fn) {
+
+std::string parser::compile(std::string fn) {
 	//get started
 	if (!startup(fn))
 		return "Error opening file.\n";
@@ -66,7 +67,7 @@ void parser::pushProdRHS(int prodNum) {
 	}
 }
 
-bool parser::startup(string filename) {
+bool parser::startup(std::string filename) {
 	//open the file
 	if (scan.open(filename) != 1)
 		return false;

@@ -20,9 +20,9 @@ void token::setRef(symbol* tref) {
 	ref = tref;
 }
 
-string token::getPrintString() {
-	stringstream m;
-	m << "TOK:  ID=" << right << setw(2) << to_string((int)id) << " " << left << setw(15)
+std::string token::getPrintString() {
+	std::stringstream m;
+	m << "TOK:  ID=" << std::right << std::setw(2) << std::to_string((int)id) << " " << std::left << std::setw(15)
 		<< TOKENID_STR[(int)id];
 	if (ref) m << "LEX=" << (ref->getLex());
 	else if ((int)id <= LAST_TOK_RESWD_NDX) m << "RESWD";

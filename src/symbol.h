@@ -1,6 +1,5 @@
 #include <string>
 #pragma once
-using namespace std;
 
 // symbol category constants
 const int SYMCAT_IDENT = -1;
@@ -16,16 +15,16 @@ const int DTYPE_STRING = 3;
 
 class symbol {
 public:
-	friend class symbolTable;
+	friend class    symbolTable;
 	symbol();
-	void   setLex(string lex);
-	void   setDataType(int dt);
-	string getLex();
-	int    getCategory();
-	int    getDataType();
+	void            setLex(std::string lex);
+	void            setDataType(int dt);
+	std::string     getLex();
+	int             getCategory();
+	int             getDataType();
 private:
-	string		lexeme;				// spelling of an ident or literal
-	int			category;			// one of SYMCAT_
-	int			dataType;			// one of DTYPE_
-	symbol*		next;				// linked list next pointer
+	std::string		lexeme;				// spelling of an ident or literal
+	int			    category;			// one of SYMCAT_
+	int			    dataType;			// one of DTYPE_
+	symbol*		    next;				// linked list next pointer
 };

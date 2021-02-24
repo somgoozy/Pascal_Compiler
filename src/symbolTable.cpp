@@ -3,7 +3,7 @@
 #include <iomanip>
 #include "symbolTable.h"
 
-symbol* symbolTable::insert(string newlex) {
+symbol* symbolTable::insert(std::string newlex) {
 	//insert lexeme into the symbol table
 	symbol* s = search(newlex);
 	if (!s) {
@@ -16,7 +16,7 @@ symbol* symbolTable::insert(string newlex) {
 	return s;
 }
 
-int symbolTable::hash(string lexToHash) {
+int symbolTable::hash(std::string lexToHash) {
 	//simple hashing function
 	int sum = 0;
 	for (int i = 0; i < (int)lexToHash.length(); i++) {
@@ -25,7 +25,7 @@ int symbolTable::hash(string lexToHash) {
 	return sum % NUMBER_OF_BUCKETS;
 }
 
-symbol* symbolTable::search(string searchFor) {
+symbol* symbolTable::search(std::string searchFor) {
 	//search for reference to a given lexeme
 	int hv = hash(searchFor);
 	symbol* p = bucket[hv];
