@@ -100,7 +100,39 @@ value interpreter::expression(token top) {
 }
 
 void interpreter::simplify(std::vector<value>& myVector) {
-
+	if (myVector.size() > 1) {
+		//do parenths
+		doParenth(myVector);
+		//do math
+		for (size_t i = 0; i < myVector.size(); i++) {
+            //multiply
+			if (myVector[i].tok.getId() == TOK_STAR) {
+                myVector[i].tokVal = (myVector[i-1].tokVal * myVector[i+1].tokVal);
+                fixVector(myVector, i);
+                i--;
+			}
+			//divide
+			else if (myVector[i].tok.getId() == TOK_STAR) {
+                myVector[i].tokVal = (myVector[i-1].tokVal / myVector[i+1].tokVal);
+                fixVector(myVector, i);
+                i--;
+			}
+		}
+		for (size_t i = 0; i < myVector.size(); i++) {
+			//add
+			if (myVector[i].tok.getId() == TOK_STAR) {
+                myVector[i].tokVal = (myVector[i-1].tokVal + myVector[i+1].tokVal);
+                fixVector(myVector, i);
+                i--;
+			}
+			//subtract
+            else if (myVector[i].tok.getId() == TOK_STAR) {
+                myVector[i].tokVal = (myVector[i-1].tokVal - myVector[i+1].tokVal);
+                fixVector(myVector, i);
+                i--;
+			}
+		}
+	}
 }
 
 void interpreter::doParenth(std::vector<value>& myVector) {
@@ -135,6 +167,7 @@ void interpreter::doParenth(std::vector<value>& myVector) {
 
 bucket interpreter::getVal(token myToken) {
     bucket retBucket;
+    //if identifier
 	if (myToken.getRef()->getCategory() == SYMCAT_IDENT) {
 		for (size_t i = 0; i < var.size(); i++) {
 			if (var[i].tok.getRef() == myToken.getRef()) {
@@ -143,12 +176,15 @@ bucket interpreter::getVal(token myToken) {
 		}
 		//throw error; undefined identifier used in expression
 	}
+	//if int lit
 	else if (myToken.getRef()->getCategory() == SYMCAT_INT_LIT) {
 		retBucket = stoi(myToken.getRef()->getLex());
 	}
+	//if real lit
 	else if (myToken.getRef()->getCategory() == SYMCAT_REAL_LIT) {
 		retBucket = stof(myToken.getRef()->getLex());
 	}
+	//if string lit
 	else if (myToken.getRef()->getCategory() == SYMCAT_STRING_LIT) {
 		retBucket = myToken.getRef()->getLex();
 	}
@@ -157,4 +193,20 @@ bucket interpreter::getVal(token myToken) {
         //should never happen
         }
 	return retBucket;
+}
+
+void interpreter::fixVector(std::vector<value>& myVector, int pos){
+    //set tokenId to correct value
+    if (myVector[pos].tokVal.getType() == type::INT) {
+        myVector[pos].tok.setId(TOK_INTEGER);
+    }
+    else if (myVector[pos].tokVal.getType() == type::FLOAT) {
+        myVector[pos].tok.setId(TOK_REAL);
+    }
+    else {
+        //throw error
+    }
+    //delete neighbors
+    myVector.erase(myVector.begin() + pos + 1);
+    myVector.erase(myVector.begin() + pos - 1);
 }

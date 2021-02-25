@@ -12,7 +12,7 @@ struct value { token tok; bucket tokVal; };
 
 class interpreter {
 public:
-	void                push(token top, int prodNum);
+	void                    push(token top, int prodNum);
 	interpreter();
 private:
 	std::stack<progress>    advancement;
@@ -23,4 +23,5 @@ private:
 	void                    simplify(std::vector<value>& myList);
 	void                    doParenth(std::vector<value>& myVector);
 	bucket                  getVal(token myToken);
+	void                    fixVector(std::vector<value>& myVector, int pos);
 };
