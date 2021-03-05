@@ -1,21 +1,11 @@
 #include <iostream>
 #include "scanner.h"
 
-std::string scanner::getError() {
-	return error;
-}
-
-bool scanner::isError() {
-	return is_error;
-}
-
-int	scanner::open(std::string source) {
+void scanner::open(std::string source) {
 	f.open(source);
 	if (f.fail()) {
-		setError("open()", ' ', "Unable to open input file.");
-		return 0;
+		throw std::runtime_error("Unable to open input file.");
 	}
-	return 1;
 }
 
 void scanner::close() {
@@ -46,7 +36,7 @@ CHAR_CAT scanner::categorize(char c) {
 	if (c >= ' ' && c < '~') return CHAR_CAT::OTHER;
 
 	// unidentified
-	setError("categorize()", c, "Invalid character found in source.");
+	throw std::runtime_error ("Invalid character \"" + std::to_string(c) + "\"found in source.");
 	return CHAR_CAT::UNKNOWN;
 }
 
@@ -68,18 +58,21 @@ std::string scanner::getFSAerror(CHAR_CAT cc, FSA_STATE state) {
 }
 
 int scanner::getTrans(FSA_STATE currState, char c) {
-	CHAR_CAT cc = categorize(c);
-	if (is_error) return -1;
-	char la = f.peek();
-	CHAR_CAT lacc = categorize(f.peek());
-
-	for (int i = 0; i < NUM_FSA_TRANS; i++) {
-		if ((trans[i].from == currState) &&
-			(trans[i].ccat == cc || trans[i].ccat == CHAR_CAT::ANY) &&
-			(trans[i].la == lacc || trans[i].la == CHAR_CAT::ANY))
-			return i;
-	}
-	setError("getTrans()", c, getFSAerror(cc, currState));
+    try {
+        CHAR_CAT cc = categorize(c);
+        if (is_error) return -1;
+        CHAR_CAT lacc = categorize(f.peek());
+        for (int i = 0; i < NUM_FSA_TRANS; i++) {
+            if ((trans[i].from == currState) &&
+                (trans[i].ccat == cc || trans[i].ccat == CHAR_CAT::ANY) &&
+                (trans[i].la == lacc || trans[i].la == CHAR_CAT::ANY))
+                return i;
+        }
+        throw std::runtime_error (getFSAerror(cc, currState));
+    }
+    catch(std::runtime_error& myError) {
+        throw std::runtime_error("Error on line " + std::to_string(lineNo) + ": " + myError.what());
+    }
 	return -1;
 }
 
@@ -94,7 +87,7 @@ std::string scanner::getNextLexeme() {
 		transNo = getTrans(state, c);
 		if (!is_error) {
 			if (trans[transNo].to == FSA_STATE::ERR)
-				setError("getNextLexeme()", c, getFSAerror(categorize(c), state));
+				throw std::runtime_error("Error on line " + std::to_string(lineNo) + ": " +getFSAerror(categorize(c), state));
 			else {
 				state = trans[transNo].to;
 				if (trans[transNo].act == ACTION::KEEP)
@@ -125,11 +118,16 @@ std::string scanner::upcase(std::string s) {
 
 TOKENID scanner::symCatToTokId(int cat) {
 	switch (cat) {
-	case SYMCAT_IDENT:      return TOKENID::TOK_IDENT;
-	case SYMCAT_INT_LIT:    return TOKENID::TOK_INT_LIT;
-	case SYMCAT_REAL_LIT:   return TOKENID::TOK_REAL_LIT;
-	case SYMCAT_STRING_LIT: return TOKENID::TOK_STRING_LIT;
-	default:                return TOKENID::TOK_NONE;
+        case SYMCAT_IDENT:
+            return TOKENID::TOK_IDENT;
+        case SYMCAT_INT_LIT:
+            return TOKENID::TOK_INT_LIT;
+        case SYMCAT_REAL_LIT:
+            return TOKENID::TOK_REAL_LIT;
+        case SYMCAT_STRING_LIT:
+            return TOKENID::TOK_STRING_LIT;
+        default:
+            return TOKENID::TOK_NONE;
 	}
 }
 
@@ -147,24 +145,12 @@ token scanner::getNextToken() {
 		lex = upcase(lex);
 		tid = resWordToTokenId(lex);
 		if (tid == TOKENID::TOK_NONE) {
-			tref = symbolTbl.insert(lex);
-			tid = symCatToTokId(tref->getCategory());
+            tref = symbolTbl.insert(lex);
+            tid = symCatToTokId(tref->getCategory());
 		}
 	}
+    t.setLineNo(lineNo);
 	t.setId(tid);
 	t.setRef(tref);
 	return t;
-}
-
-void scanner::setError(std::string method, char c, std::string msg) {
-	std::string sc = " ";
-	sc[0] = c;
-	error = "SCANERROR::" + method + "  Line=" + std::to_string(lineNo) + " Character=";
-	int ascii = (int)c;
-	if (ascii <= 32 || ascii >= 127)
-		error += "UNPRINTABLE (";
-	else
-		error += "'" + sc + "' (";
-	error += std::to_string(ascii) + ")\n" + msg;
-	is_error = true;
 }

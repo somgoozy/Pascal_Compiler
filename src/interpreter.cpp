@@ -7,7 +7,7 @@ interpreter::interpreter() {
 }
 
 void interpreter::push(token top, int prod) {
-	static value exp;
+	value exp;
 	//move everything forward by 1
 	increment();
 	//if we are done
@@ -84,19 +84,44 @@ value interpreter::expression(token top) {
 	if (PROD[advancement.top().prodNum][advancement.top().depth] == TOK_TERM
             && PROD[advancement.top().prodNum][GR_LHS] == TOK_N_EXPR_END) {
 		if (rhs.size() < 1) {
-			simplify(rhs);
+            try {
+                simplify(rhs);
+                return rhs[0];
+            }
+            catch(std::invalid_argument& myError) {
+                throw std::runtime_error("Error on line " + std::to_string(top.getLineNo()) + ": " + myError.what());
+            }
 		}
 	}
+	//if + or minus unary op
+	else if (PROD[advancement.top().prodNum][GR_FIRST_RHS] == TOK_PLUS
+            && PROD[advancement.top().prodNum][GR_LHS] == TOK_N_VAL) {
+        myVal.tok.setId(TOKENID::TOK_INT_LIT);
+        myVal.tokVal = 1;
+        rhs.emplace_back(myVal);
+        myVal.tok.setId(TOKENID::TOK_STAR);
+        rhs.emplace_back(myVal);
+        }
+    else if (PROD[advancement.top().prodNum][GR_FIRST_RHS] == TOK_MINUS
+            && PROD[advancement.top().prodNum][GR_LHS] == TOK_N_VAL) {
+        myVal.tok.setId(TOKENID::TOK_INT_LIT);
+        myVal.tokVal = -1;
+        rhs.emplace_back(myVal);
+        myVal.tok.setId(TOKENID::TOK_STAR);
+        rhs.emplace_back(myVal);
+        }
 	//if its a terminal then push it to the vector
 	else if (!top.isNonTerminal()) {
-		if (top.getRef() != NULL) {
+		if ((top.getId() == TOKENID::TOK_INT_LIT)
+                || (top.getId() == TOKENID::TOK_STRING_LIT)
+                || (top.getId() == TOKENID::TOK_REAL_LIT)) {
 			myVal.tokVal = getVal(top);
 		}
 		myVal.tok.setId(top.getId());
 		myVal.tok.setRef(top.getRef());
 		rhs.emplace_back(myVal);
 	}
-	return rhs[0];
+	return myVal;
 }
 
 void interpreter::simplify(std::vector<value>& myVector) {
@@ -104,35 +129,35 @@ void interpreter::simplify(std::vector<value>& myVector) {
 		//do parenths
 		doParenth(myVector);
 		//do math
-		for (size_t i = 0; i < myVector.size(); i++) {
+        for (size_t i = 0; i < myVector.size(); i++) {
             //multiply
-			if (myVector[i].tok.getId() == TOK_STAR) {
+            if (myVector[i].tok.getId() == TOK_STAR) {
                 myVector[i].tokVal = (myVector[i-1].tokVal * myVector[i+1].tokVal);
                 fixVector(myVector, i);
                 i--;
-			}
-			//divide
-			else if (myVector[i].tok.getId() == TOK_STAR) {
+            }
+            //divide
+            else if (myVector[i].tok.getId() == TOK_STAR) {
                 myVector[i].tokVal = (myVector[i-1].tokVal / myVector[i+1].tokVal);
                 fixVector(myVector, i);
                 i--;
-			}
-		}
-		for (size_t i = 0; i < myVector.size(); i++) {
-			//add
-			if (myVector[i].tok.getId() == TOK_STAR) {
+            }
+        }
+        for (size_t i = 0; i < myVector.size(); i++) {
+            //add
+            if (myVector[i].tok.getId() == TOK_STAR) {
                 myVector[i].tokVal = (myVector[i-1].tokVal + myVector[i+1].tokVal);
                 fixVector(myVector, i);
                 i--;
-			}
-			//subtract
+            }
+            //subtract
             else if (myVector[i].tok.getId() == TOK_STAR) {
                 myVector[i].tokVal = (myVector[i-1].tokVal - myVector[i+1].tokVal);
                 fixVector(myVector, i);
                 i--;
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 void interpreter::doParenth(std::vector<value>& myVector) {
@@ -168,29 +193,29 @@ void interpreter::doParenth(std::vector<value>& myVector) {
 bucket interpreter::getVal(token myToken) {
     bucket retBucket;
     //if identifier
-	if (myToken.getRef()->getCategory() == SYMCAT_IDENT) {
+	if (myToken.getId() == TOKENID::TOK_IDENT) {
 		for (size_t i = 0; i < var.size(); i++) {
 			if (var[i].tok.getRef() == myToken.getRef()) {
-				return var[i].tokVal;
+				retBucket = var[i].tokVal;
 			}
 		}
-		//throw error; undefined identifier used in expression
+        throw std::runtime_error("Error on line " + std::to_string(myToken.getLineNo()) + ": Undefined identifier\n");
 	}
 	//if int lit
-	else if (myToken.getRef()->getCategory() == SYMCAT_INT_LIT) {
+	else if (myToken.getId() == TOKENID::TOK_INT_LIT) {
 		retBucket = stoi(myToken.getRef()->getLex());
 	}
 	//if real lit
-	else if (myToken.getRef()->getCategory() == SYMCAT_REAL_LIT) {
+	else if (myToken.getId() == TOKENID::TOK_REAL_LIT) {
 		retBucket = stof(myToken.getRef()->getLex());
 	}
 	//if string lit
-	else if (myToken.getRef()->getCategory() == SYMCAT_STRING_LIT) {
+	else if (myToken.getId() == TOKENID::TOK_STRING_LIT) {
 		retBucket = myToken.getRef()->getLex();
 	}
     else {
         //throw error; unknown data type
-        //should never happen
+        throw std::runtime_error("Error on line " + std::to_string(myToken.getLineNo()) + ": Unknown token type\n");
         }
 	return retBucket;
 }
@@ -198,10 +223,10 @@ bucket interpreter::getVal(token myToken) {
 void interpreter::fixVector(std::vector<value>& myVector, int pos){
     //set tokenId to correct value
     if (myVector[pos].tokVal.getType() == type::INT) {
-        myVector[pos].tok.setId(TOK_INTEGER);
+        myVector[pos].tok.setId(TOK_INT_LIT);
     }
     else if (myVector[pos].tokVal.getType() == type::FLOAT) {
-        myVector[pos].tok.setId(TOK_REAL);
+        myVector[pos].tok.setId(TOK_REAL_LIT);
     }
     else {
         //throw error

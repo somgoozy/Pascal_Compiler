@@ -56,8 +56,9 @@
 #define LPAREN			TOK_LPAREN
 #define RPAREN			TOK_RPAREN
 #define TERM            TOK_TERM
+#define NUM_VAL         TOK_N_NUM_VAL
 
-const int GR_NUMPRODS = 41;			// total number of productions in grammar
+const int GR_NUMPRODS = 40;			// total number of productions in grammar
 const int GR_TABLE_WIDTH = 11;		// total number of columns in table
 const int GR_LHS = 0;				// index of LHS Non-Terminal
 const int GR_FIRST_RHS = 1;			// index of first Term/NT of RHS
@@ -86,6 +87,7 @@ const TOKENID PROD[GR_NUMPRODS][GR_TABLE_WIDTH] = {
 	{STMT,          WHILE,      COND,           DO,         STMT,   E,          E,      WHILE,      E,      E,      E},
 	{STMT,          CMPD_STMT,  E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
 	{COND,          EXPR,       RELOP,          EXPR,       E,      E,          E,      DEFAULT,    E,      E,      E},
+    {EXPR,          STRING_LIT, E,              E,          E,      E,          E,      STRING_LIT, E,      E,      E},
 	{EXPR,          VAL,        EXPR_END,       E,          E,      E,          E,      DEFAULT,    E,      E,      E},
 	{EXPR_END,      ARITH,      VAL,            EXPR_END,   E,      E,          E,      PLUS,       MINUS,  STAR,   SLASH},
 	{EXPR_END,      TERM,       E,              E,          E,      E,          E,      DEFAULT,    E,      E,      E},
@@ -102,10 +104,9 @@ const TOKENID PROD[GR_NUMPRODS][GR_TABLE_WIDTH] = {
 	{VAL,           IDENT,      E,              E,          E,      E,          E,      IDENT,      E,      E,      E},
 	{VAL,           INT_LIT,    E,              E,          E,      E,          E,      INT_LIT,    E,      E,      E},
 	{VAL,           REAL_LIT,   E,              E,          E,      E,          E,      REAL_LIT,   E,      E,      E},
-	{VAL,           STRING_LIT, E,              E,          E,      E,          E,      STRING_LIT, E,      E,      E},
 	{VAL,           LPAREN,     EXPR,           RPAREN,     E,      E,          E,      LPAREN,     E,      E,      E},
-	{VAL,           PLUS,       INT_LIT,        E,          E,      E,          E,      PLUS,       E,      E,      E},
-	{VAL,           MINUS,      INT_LIT,        E,          E,      E,          E,      DEFAULT,    E,      E,      E},
+	{VAL,           PLUS,       VAL,            E,          E,      E,          E,      PLUS,       E,      E,      E},
+	{VAL,           MINUS,      VAL,            E,          E,      E,          E,      DEFAULT,    E,      E,      E},
 };
 
 //undefine macros

@@ -3,23 +3,21 @@
 #include <fstream>
 #include <string>
 #include "src/parser.h"
-using namespace std;
+
 
 int  main(int argc, char** argv) {
 	parser p;
-	string fileName, errMsg;
+	std::string fileName, errMsg;
 
 	// get file name from command line, or ask user
 	if (argc > 1)
 		fileName = argv[1];
 	else {
-		cout << "Enter file name: ";
-		getline(cin, fileName);
+		std::cout << "Enter file name: ";
+		getline(std::cin, fileName);
 	}
 
 	// open file in scanner
-	errMsg = p.compile(fileName);
-	if (errMsg != "") cout << errMsg << endl;
-
+	p.compile(fileName);
 	return 0;
 }

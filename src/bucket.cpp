@@ -1,4 +1,5 @@
 #include "bucket.h"
+
 bucket bucket::operator*(const bucket& theirBucket) {
     bucket retData;
     switch(theirBucket.myType) {
@@ -19,7 +20,7 @@ bucket bucket::operator*(const bucket& theirBucket) {
                     break;
                 }
                 default: {
-                    //throw error
+                    throw std::invalid_argument("Cannot multiply types" + stringType(myType) + " and FLOAT\n");
                     break;
                 }
             }
@@ -42,14 +43,14 @@ bucket bucket::operator*(const bucket& theirBucket) {
                     break;
                 }
                 default: {
-                    //throw error; invalid type
+                    throw std::invalid_argument("Cannot multiply types" + stringType(myType) + " and INT\n");
                     break;
                 }
             }
             break;
         }
         default: {
-            //throw error; invalid type
+            throw std::invalid_argument("Cannot multiply types" + stringType(myType) + " and " + stringType(theirBucket.myType) + "\n");
             break;
         }
     }
@@ -77,13 +78,13 @@ bucket bucket::operator/(const bucket& theirBucket) {
                         break;
                     }
                     default: {
-                        //throw error; invalid type
+                        throw std::invalid_argument("Cannot divide types" + stringType(myType) + " and FLOAT\n");
                         break;
                     }
                 }
             }
             else {
-                //throw error; cannot divide by zero
+                throw std::invalid_argument("Cannot divide by 0\n");
             }
             break;
         }
@@ -105,18 +106,18 @@ bucket bucket::operator/(const bucket& theirBucket) {
                         break;
                     }
                     default: {
-                        //throw error; invalid type
+                        throw std::invalid_argument("Cannot divide types" + stringType(myType) + " and INT\n");
                         break;
                     }
                 }
             }
             else {
-                //throw error; cannot divide by zero
+                throw std::invalid_argument("Cannot divide by 0\n");
             }
             break;
         }
         default:{
-            //throw error; invalid type
+            throw std::invalid_argument("Cannot divide types" + stringType(myType) + " and " + stringType(theirBucket.myType) + "\n");
             break;
         }
     }
@@ -143,7 +144,7 @@ bucket bucket::operator+(const bucket& theirBucket) {
                     break;
                 }
                 default: {
-                    //throw error; invalid type
+                    throw std::invalid_argument("Cannot add types" + stringType(myType) + " and FLOAT\n");
                     break;
                 }
             }
@@ -166,14 +167,14 @@ bucket bucket::operator+(const bucket& theirBucket) {
                     break;
                 }
                 default: {
-                    //throw error
+                    throw std::invalid_argument("Cannot add types" + stringType(myType) + " and INT\n");
                     break;
                 }
             }
             break;
         }
         default: {
-            //throw error; invalid type
+            throw std::invalid_argument("Cannot add types" + stringType(myType) + " and " + stringType(theirBucket.myType) + "\n");
             break;
         }
     }
@@ -186,19 +187,21 @@ bucket bucket::operator-(const bucket& theirBucket) {
         case type::FLOAT: {
             switch(myType) {
                 case type::INT: {
+                    //int - float
                     retData.myFloat = myInt - theirBucket.myFloat;
                     retData.myType = type::FLOAT;
                     return retData;
                     break;
                 }
                 case type::FLOAT: {
+                    //float - float
                     retData.myFloat = myFloat - theirBucket.myFloat;
                     retData.myType = type::FLOAT;
                     return retData;
                     break;
                 }
                 default: {
-                    //throw error
+                    throw std::invalid_argument("Cannot subtract types" + stringType(myType) + " and FLOAT\n");
                     break;
                 }
             }
@@ -207,26 +210,28 @@ bucket bucket::operator-(const bucket& theirBucket) {
         case type::INT: {
             switch(myType) {
                 case type::INT: {
+                    //int - int
                     retData.myInt = myInt - theirBucket.myInt;
                     retData.myType = type::INT;
                     return retData;
                     break;
                 }
                 case type::FLOAT: {
+                    //float - int
                     retData.myFloat = myFloat - theirBucket.myInt;
                     retData.myType = type::FLOAT;
                     return retData;
                     break;
                 }
                 default: {
-                    //throw error
+                throw std::invalid_argument("Cannot subtract types" + stringType(myType) + " and INT\n");
                     break;
                 }
             }
             break;
         }
         default: {
-            //throw error; invalid type
+            throw std::invalid_argument("Cannot subtract types" + stringType(myType) + " and " + stringType(theirBucket.myType) + "\n");
             break;
         }
     }
@@ -258,26 +263,25 @@ void bucket::operator=(const bucket& theirBucket) {
     switch (theirBucket.myType) {
         case(type::BOOL): {
             myBool = theirBucket.myBool;
-            myType = theirBucket.myType;
             break;
         }
         case(type::INT): {
             myInt = theirBucket.myInt;
-            myType = theirBucket.myType;
             break;
         }
         case(type::FLOAT): {
             myFloat = theirBucket.myFloat;
-            myType = theirBucket.myType;
             break;
         }
         case(type::STRING): {
             myString = theirBucket.myString;
-            myType = theirBucket.myType;
+            break;
+        }
+        case(type::UNINITIALIZED): {
             break;
         }
         default: {
-            //throw error; unknown type
+            throw std::invalid_argument("Unrecognized type!");
         }
     }
 }
@@ -314,4 +318,36 @@ float bucket::getFloat() {
 
 std::string bucket::getString() {
     return myString;
+}
+
+std::string bucket::stringType(type t) {
+    switch(t) {
+        case type::STRING: {
+            return "STRING";
+            break;
+        }
+        case type::INT: {
+            return "INT";
+            break;
+        }
+        case type::FLOAT: {
+            return "REAL";
+            break;
+        }
+        case type::BOOL: {
+            return "BOOLEAN";
+            break;
+        }
+        case type::UNINITIALIZED: {
+            return "UNINITIALIZED";
+            break;
+        }
+        default: {
+            throw std::invalid_argument("Unrecognized type!");
+        }
+    }
+}
+
+bucket::bucket() {
+    myType = type::UNINITIALIZED;
 }

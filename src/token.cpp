@@ -21,13 +21,15 @@ void token::setRef(symbol* tref) {
 }
 
 std::string token::getPrintString() {
-	std::stringstream m;
-	m << "TOK:  ID=" << std::right << std::setw(2) << std::to_string((int)id) << " " << std::left << std::setw(15)
-		<< TOKENID_STR[(int)id];
-	if (ref) m << "LEX=" << (ref->getLex());
-	else if ((int)id <= LAST_TOK_RESWD_NDX) m << "RESWD";
-	else m << "NON-TERM";
-	return m.str();
+	std::string myString = "";
+	myString += "TOK: ID=" + std::to_string((int)id) + " " + TOKENID_STR[(int)id];
+	if (ref)
+        myString += " LEX=" + (ref->getLex());
+	else if ((int)id <= LAST_TOK_RESWD_NDX)
+        myString += " RESWD";
+	else
+        myString += " NON-TERM";
+	return myString;
 }
 
 bool token::isNonTerminal() {
@@ -51,4 +53,12 @@ bool token::isNonTerminal() {
 		id == TOK_DEFAULT)
 		return true;
 	else return false;
+}
+
+int token::getLineNo() {
+    return lineNo;
+}
+
+void token::setLineNo(int num) {
+    lineNo = num;
 }

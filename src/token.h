@@ -56,7 +56,10 @@ public:
 	void			setRef(symbol* tref);
 	std::string		getPrintString();
 	bool            isNonTerminal();
+	int             getLineNo();
+	void            setLineNo(int num);
 private:
 	TOKENID			id = TOK_NONE;		    // identifies the type of token, including reserved words/symbols
-	symbol*         ref = NULL;				// pointer to an entry in the symbol table; NULL for res. words
+	symbol*         ref = NULL;	            // pointer to an entry in the symbol table; NULL for res. words
+	int             lineNo;
 };

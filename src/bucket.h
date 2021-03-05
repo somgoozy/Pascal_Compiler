@@ -1,7 +1,8 @@
 #include <string>
+#include <stdexcept>
 #pragma once
 
-enum class type { INT, BOOL, FLOAT, STRING };
+enum class type { INT, BOOL, FLOAT, STRING, UNINITIALIZED };
 
 class bucket{
 private:
@@ -10,7 +11,9 @@ private:
     float       myFloat;
     std::string myString;
     type        myType;
+    std::string stringType(type);
 public:
+    bucket();
     bucket      operator*(const bucket& theirData);
     bucket      operator/(const bucket& theirData);
     bucket      operator+(const bucket& theirData);

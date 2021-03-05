@@ -1,5 +1,6 @@
 #include <string>
 #include <stack>
+#include <exception>
 #include "scanner.h"
 #include "grammar.h"
 #include "interpreter.h"
@@ -7,7 +8,7 @@
 
 class parser {
 public:
-	std::string                     compile(std::string fn);
+	void                            compile(std::string fn);
 private:
 	std::stack<token>               tokStack;
 	std::stack<std::array<int, 2>>  progress;
@@ -17,5 +18,5 @@ private:
 	interpreter                     myInterpreter;
 	int                             selectProd();
 	void                            pushProdRHS(int prodNum);
-	bool                            startup(std::string filename);
+	void                            startup(std::string filename);
 };
